@@ -294,7 +294,7 @@ open class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
         
         let frame = self.bounds
 
-        if _data === nil
+        if _data === nil || _data!.yValCount == 0
         {
             context.saveGState()
             defer { context.restoreGState() }
