@@ -21,6 +21,10 @@ import CoreGraphics
 /// Base-class of LineChart, BarChart, ScatterChart and CandleStickChart.
 open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartDataProvider, NSUIGestureRecognizerDelegate
 {
+    static let DEFAULT_TOUCH_HIGHLIGHT_PADDING_SIZE = CGFloat(22.0)
+    
+    open var touchPaddingSize = DEFAULT_TOUCH_HIGHLIGHT_PADDING_SIZE;
+    
     /// the maximum number of entries to which values will be drawn
     /// (entry numbers greater than this value will cause value-labels to disappear)
     internal var _maxVisibleValueCount = 100
@@ -1582,7 +1586,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
             return nil
         }
 
-        return self.highlighter?.getHighlight(x: pt.x, y: pt.y)
+        return self.highlighter?.getHighlight(x: pt.x, y: pt.y, padding: touchPaddingSize)
     }
 
     /// - returns: the x and y values in the chart at the given touch point

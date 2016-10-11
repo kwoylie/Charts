@@ -39,6 +39,69 @@ open class ChartHighlighter : NSObject
         return ChartHighlight(xIndex: xIndex, value: selectionDetail.value, dataIndex: selectionDetail.dataIndex, dataSetIndex: selectionDetail.dataSetIndex, stackIndex: -1)
     }
     
+    open func getHighlight(x: CGFloat, y: CGFloat, padding: CGFloat) -> ChartHighlight?
+    {
+        let xMinIndex = getXIndex(x - padding);
+        let xMaxIndex = getXIndex(x + padding);
+        
+        guard let result = getSelectionDetailInRange(minXindex: xMinIndex, maxXindex: xMaxIndex, x: x, y: y, padding:padding) else {
+            return nil
+        }
+        
+        let selectionDetail = result.selection;
+        let xIndex = result.xIndex;
+        
+        return ChartHighlight(xIndex: xIndex, value: selectionDetail.value, dataIndex: selectionDetail.dataIndex, dataSetIndex: selectionDetail.dataSetIndex, stackIndex: -1)
+    }
+    
+    /// Returns a list of SelectionDetail object corresponding to the given xIndex.
+    /// :param: xIndex
+    /// :return:
+    
+    internal func getSelectionDetailInRange(minXindex: Int, maxXindex: Int, x: CGFloat, y: CGFloat, padding: CGFloat) -> (xIndex: Int, selection:ChartSelectionDetail)?
+    {
+        
+        var minDistance = CGFloat(-1)
+        let cappedDistance = padding * padding
+        
+        let chartViewBounds = (
+            left: chart!.viewPortHandler.contentLeft,
+            right: chart!.viewPortHandler.contentLeft + chart!.viewPortHandler.contentWidth,
+            top: chart!.viewPortHandler.contentTop,
+            bottom: chart!.viewPortHandler.contentHeight + chart!.viewPortHandler.contentTop
+        )
+        
+        var resultSelection : (Int, ChartSelectionDetail)?
+        for xIndex in minXindex...maxXindex {
+            let chartSelections = getSelectionDetailsAtIndex(xIndex, dataSetIndex:nil);
+            for object in chartSelections {
+                let selection = object as ChartSelectionDetail
+                var pt = CGPoint(x: xIndex, y: 0);
+                chart?.getTransformer(selection.dataSet!.axisDependency).pointValueToPixel(&pt);
+                
+                pt.y = CGFloat(selection.y)
+                
+                if (pt.x >= chartViewBounds.left
+                    && pt.x <= chartViewBounds.right
+                    && pt.y >= chartViewBounds.top
+                    && pt.y <= chartViewBounds.bottom)
+                {
+                    let xDistance = fabs(pt.x - x)
+                    let yDistance = fabs(pt.y - y)
+                    
+                    let distance = xDistance * xDistance + yDistance * yDistance;
+                    
+                    if (distance <= cappedDistance && (distance < minDistance || minDistance < 0)) {
+                        minDistance = distance
+                        resultSelection = (xIndex: xIndex, selection: selection)
+                    }
+                }
+            }
+        }
+        return resultSelection
+    }
+
+    
     /// Returns the corresponding x-index for a given touch-position in pixels.
     /// - parameter x:
     /// - returns:

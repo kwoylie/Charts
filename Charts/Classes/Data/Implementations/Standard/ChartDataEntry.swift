@@ -23,7 +23,7 @@ open class ChartDataEntry: NSObject
     open var xIndex = Int(0)
     
     /// optional spot for additional data this Entry represents
-    open var data: AnyObject?
+    open var data: NSString?
     
     public override required init()
     {
@@ -38,13 +38,13 @@ open class ChartDataEntry: NSObject
         self.xIndex = xIndex
     }
     
-    public init(value: Double, xIndex: Int, data: Any?)
+    public init(value: Double, xIndex: Int, data: NSString?)
     {
         super.init()
         
         self.value = value
         self.xIndex = xIndex
-        self.data = data as AnyObject
+        self.data = data
     }
     
     // MARK: NSObject

@@ -46,12 +46,12 @@ open class BarChartDataEntry: ChartDataEntry
     /// Constructor for stacked bar entries.
     public init(values: [Double], xIndex: Int, label: String)
     {
-        super.init(value: BarChartDataEntry.calcSum(values), xIndex: xIndex, data: label)
+        super.init(value: BarChartDataEntry.calcSum(values), xIndex: xIndex, data: NSString(string:label))
         self.values = values
     }
     
     /// Constructor for normal bars (not stacked).
-    public override init(value: Double, xIndex: Int, data: Any?)
+    public override init(value: Double, xIndex: Int, data: NSString?)
     {
         super.init(value: value, xIndex: xIndex, data: data)
     }

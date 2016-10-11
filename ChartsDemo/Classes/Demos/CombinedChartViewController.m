@@ -46,13 +46,9 @@
     _chartView.drawGridBackgroundEnabled = NO;
     _chartView.drawBarShadowEnabled = NO;
     
-    _chartView.drawOrder = @[
-                             @(CombinedChartDrawOrderBar),
-                             @(CombinedChartDrawOrderBubble),
-                             @(CombinedChartDrawOrderCandle),
+    /*_chartView.drawOrder = @[
                              @(CombinedChartDrawOrderLine),
-                             @(CombinedChartDrawOrderScatter)
-                             ];
+                             ];*/
     
     ChartYAxis *rightAxis = _chartView.rightAxis;
     rightAxis.drawGridLinesEnabled = NO;
@@ -89,8 +85,8 @@
 {
     CombinedChartData *data = [[CombinedChartData alloc] initWithXVals:months];
     data.lineData = [self generateLineData];
-    data.barData = [self generateBarData];
-    data.bubbleData = [self generateBubbleData];
+    //data.barData = [self generateBarData];
+    //data.bubbleData = [self generateBubbleData];
     //data.scatterData = [self generateScatterData];
     //data.candleData = [self generateCandleData];
     
@@ -158,28 +154,6 @@
     return d;
 }
 
-- (BarChartData *)generateBarData
-{
-    BarChartData *d = [[BarChartData alloc] init];
-    
-    NSMutableArray *entries = [[NSMutableArray alloc] init];
-    
-    for (int index = 0; index < ITEM_COUNT; index++)
-    {
-        [entries addObject:[[BarChartDataEntry alloc] initWithValue:(arc4random_uniform(15) + 30) xIndex:index]];
-    }
-    
-    BarChartDataSet *set = [[BarChartDataSet alloc] initWithYVals:entries label:@"Bar DataSet"];
-    [set setColor:[UIColor colorWithRed:60/255.f green:220/255.f blue:78/255.f alpha:1.f]];
-    set.valueTextColor = [UIColor colorWithRed:60/255.f green:220/255.f blue:78/255.f alpha:1.f];
-    set.valueFont = [UIFont systemFontOfSize:10.f];
-
-    set.axisDependency = AxisDependencyLeft;
-    
-    [d addDataSet:set];
-    
-    return d;
-}
 
 - (ScatterChartData *)generateScatterData
 {
