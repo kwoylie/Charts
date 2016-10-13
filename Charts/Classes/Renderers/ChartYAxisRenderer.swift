@@ -222,6 +222,7 @@ open class ChartYAxisRenderer: ChartAxisRendererBase
         }
         
         drawYLabels(context: context, fixedPosition: xPos, offset: yoffset - yAxis.labelFont.lineHeight, textAlign: textAlign)
+        
     }
     
     private var _axisLineSegmentsBuffer = [CGPoint](repeating: CGPoint(), count: 2)
@@ -289,14 +290,22 @@ open class ChartYAxisRenderer: ChartAxisRendererBase
                 break
             }
             
-            pt.x = 0
-            pt.y = CGFloat(yAxis.entries[i])
-            pt = pt.applying(valueToPixelMatrix)
+            let yValue = yAxis.entries[i];
             
-            pt.x = fixedPosition
-            pt.y += offset
+            if (yValue >= 0 || !yAxis.hideNegativeValues) {
+                pt.x = 0
+                pt.y = CGFloat(yValue)
+                pt = pt.applying(valueToPixelMatrix)
+                
+                pt.x = fixedPosition
+                
+                var textPt = CGPoint(x: pt.x, y: pt.y)
+                textPt.y -= labelFont.lineHeight;
+                ChartUtils.drawText(context: context, text: text, point: textPt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
+                
+                drawZeroLine(context: context, x1: viewPortHandler.contentRight , x2: viewPortHandler.contentRight + 20, y1: pt.y, y2: pt.y)
+            }
             
-            ChartUtils.drawText(context: context, text: text, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
         }
     }
     

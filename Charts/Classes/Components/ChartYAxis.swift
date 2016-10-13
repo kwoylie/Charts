@@ -43,6 +43,8 @@ open class ChartYAxis: ChartAxisBase
     open var entries = [Double]()
     open var entryCount: Int { return entries.count; }
     
+    open var hideNegativeValues = true
+    
     /// the number of y-label entries the y-labels should have, default 6
     private var _labelCount = Int(6)
     
@@ -249,11 +251,10 @@ open class ChartYAxis: ChartAxisBase
     /// - returns: the formatted y-label at the specified index. This will either use the auto-formatter or the custom formatter (if one is set).
     open func getFormattedLabel(_ index: Int) -> String
     {
-        if (index < 0 || index >= entries.count)
+        if (index < 0 || index >= entries.count || (hideNegativeValues && entries[index] < 0))
         {
             return ""
         }
-        
         return (valueFormatter ?? _defaultValueFormatter).string(from: entries[index] as NSNumber)!
     }
     
