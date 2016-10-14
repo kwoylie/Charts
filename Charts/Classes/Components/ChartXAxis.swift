@@ -27,6 +27,7 @@ open class ChartXAxis: ChartAxisBase
         case bottomInside
     }
     
+    open var forceMaxValueAlwaysShowLabel = true;
     open var values = [String?]()
     
     /// width of the x-axis labels in pixels - this is automatically calculated by the computeAxis() methods in the renderers
