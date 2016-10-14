@@ -659,6 +659,9 @@ open class LineChartRenderer: LineRadarChartRenderer
             let minx = max(dataSet.entryIndex(entry: entryFrom) - diff, 0)
             let maxx = min(max(minx + 2, dataSet.entryIndex(entry: entryTo) + 1), entryCount)
             
+            var shadowColor : UIColor = dataSet.circleHoleColor ?? UIColor.black;
+            shadowColor = shadowColor.withAlphaComponent(0.1);
+            
 			for j in stride(from: minx, to: Int(ceil(CGFloat(maxx - minx) * phaseX + CGFloat(minx))), by: 1)
             {
                 guard let e = dataSet.entryForIndex(j) else { break }
@@ -678,6 +681,8 @@ open class LineChartRenderer: LineRadarChartRenderer
                     continue
                 }
                 
+                
+                context.setShadow(offset: CGSize(width:0,height:2), blur: 4, color : shadowColor.cgColor)
                 context.setFillColor(dataSet.getCircleColor(j)!.cgColor)
                 
                 rect.origin.x = pt.x - circleRadius
@@ -699,8 +704,9 @@ open class LineChartRenderer: LineRadarChartRenderer
                 }
                 else
                 {
-                    context.fillEllipse(in: rect)
                     
+                    context.fillEllipse(in: rect)
+                    context.setShadow(offset: CGSize.zero, blur: 0)
                     if drawCircleHole
                     {
                         context.setFillColor(dataSet.circleHoleColor!.cgColor)
@@ -714,6 +720,7 @@ open class LineChartRenderer: LineRadarChartRenderer
                         context.fillEllipse(in: rect)
                     }
                 }
+                
             }
         }
         
