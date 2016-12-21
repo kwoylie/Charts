@@ -114,9 +114,19 @@ public func ==(lhs: ChartDataEntry, rhs: ChartDataEntry) -> Bool
         return false
     }
     
-    if (lhs.data !== rhs.data && !lhs.data!.isEqual(rhs.data))
-    {
-        return false
+    if lhs.data !== rhs.data {
+        if let lhsData = lhs.data as? String {
+            if let rhsData = rhs.data as? String {
+                if !lhsData.isEqual(rhsData) {
+                    return false
+                }
+                
+            }
+            else {
+                return false
+            }
+        }
+        
     }
     
     if (lhs.xIndex != rhs.xIndex)
